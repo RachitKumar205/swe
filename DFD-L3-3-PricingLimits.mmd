@@ -1,0 +1,41 @@
+flowchart TB
+    ShowMgr[["Show Manager"]]
+
+    P231(("2.3.1<br/>Set Balcony<br/>Price"))
+    P232(("2.3.2<br/>Set Ordinary<br/>Price"))
+    P233(("2.3.3<br/>Set Balcony<br/>Limit"))
+    P234(("2.3.4<br/>Set Ordinary<br/>Limit"))
+    P235(("2.3.5<br/>Validate<br/>Capacity"))
+    P236(("2.3.6<br/>Update Show<br/>Configuration"))
+
+    D3[(D3: Auditorium Layout)]
+    D4[(D4: Shows)]
+
+    ShowMgr -->|Balcony Price| P231
+    P231 -->|Price Data| P236
+
+    ShowMgr -->|Ordinary Price| P232
+    P232 -->|Price Data| P236
+
+    ShowMgr -->|Balcony Limit| P233
+    P233 -->|Validate| P235
+    P235 -->|Get Layout Capacity| D3
+    D3 -->|Max Capacity| P235
+    P235 -->|Valid Limit| P233
+    P233 -->|Limit Data| P236
+
+    ShowMgr -->|Ordinary Limit| P234
+    P234 -->|Validate| P235
+    P235 -->|Valid Limit| P234
+    P234 -->|Limit Data| P236
+
+    P236 -->|Update Show| D4
+    P236 -->|Confirmation| ShowMgr
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class ShowMgr external
+    class P231,P232,P233,P234,P235,P236 process
+    class D3,D4 datastore

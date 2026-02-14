@@ -1,0 +1,54 @@
+flowchart TB
+    Spectator[["Spectator"]]
+    Agent[["Sales Agent"]]
+    Payment[["Payment Gateway"]]
+
+    P31(("3.1<br/>Manage<br/>Coupons"))
+    P32(("3.2<br/>Book<br/>Ticket"))
+    P33(("3.3<br/>Cancel<br/>Ticket"))
+    P34(("3.4<br/>Process<br/>Payment"))
+    P35(("3.5<br/>Manage Seat<br/>Locks"))
+
+    D4[(D4: Shows)]
+    D5[(D5: Bookings)]
+    D6[(D6: Coupons)]
+    D7[(D7: Sales)]
+
+    Spectator -->|Purchase Coupon| P31
+    P31 -->|Payment| P34
+    P34 <-->|Transaction| Payment
+    P34 -->|Success| P31
+    P31 <-->|Store/Validate Coupon| D6
+    P31 -->|Coupon Code| Spectator
+
+    Spectator -->|Book: Show, Seats, Coupon?| P32
+    Agent -->|Sell: Show, Seats| P32
+    P32 -->|Check Availability| D4
+    P32 -->|Validate Coupon| D6
+    P32 -->|Lock Seat| P35
+    P35 <-->|Seat Locks| D5
+    P32 -->|Payment| P34
+    P34 -->|Success| P32
+    P32 -->|Create Booking| D5
+    P32 -->|Update Availability| D4
+    P32 -->|Record Sale| D7
+    P32 -->|Ticket| Spectator
+    P32 -->|Ticket| Agent
+
+    Spectator -->|Cancel Booking| P33
+    P33 <-->|Get/Update Booking| D5
+    P33 -->|Refund| P34
+    P34 -->|Refund Success| P33
+    P33 -->|Restore Seat| D4
+    P33 -->|Update Sale| D7
+    P33 -->|Confirmation| Spectator
+
+    P35 -->|Release Expired| D5
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class Spectator,Agent,Payment external
+    class P31,P32,P33,P34,P35 process
+    class D4,D5,D6,D7 datastore

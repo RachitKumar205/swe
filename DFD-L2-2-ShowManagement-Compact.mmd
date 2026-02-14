@@ -1,0 +1,47 @@
+flowchart TB
+    Secretary[["Secretary"]]
+    ShowMgr[["Show Manager"]]
+    ConfigFile[["Config File"]]
+
+    P21(("2.1<br/>Initialize<br/>Layout"))
+    P22(("2.2<br/>Create &<br/>Schedule Show"))
+    P23(("2.3<br/>Configure<br/>Pricing & Limits"))
+    P24(("2.4<br/>Allocate<br/>Special Seats"))
+    P25(("2.5<br/>Modify<br/>Configuration"))
+
+    D3[(D3: Auditorium Layout)]
+    D4[(D4: Shows)]
+
+    ConfigFile -->|Layout Config| P21
+    P21 -->|Validate & Store| D3
+
+    Secretary -->|Show Details| P22
+    ShowMgr -->|Show Details| P22
+    P22 -->|Get Layout| D3
+    P22 -->|Create Show| D4
+    P22 -->|Confirmation| Secretary
+    P22 -->|Confirmation| ShowMgr
+
+    ShowMgr -->|Dates, Times, Prices, Limits| P23
+    P23 <-->|Show Data| D4
+    P23 -->|Capacity Check| D3
+    P23 -->|Confirmation| ShowMgr
+
+    ShowMgr -->|VIP/Comp Seat Numbers| P24
+    P24 <-->|Show Data| D4
+    P24 -->|Validate Seats| D3
+    P24 -->|Confirmation| ShowMgr
+
+    Secretary -->|Updates| P25
+    ShowMgr -->|Updates| P25
+    P25 <-->|Modify Show| D4
+    P25 -->|Confirmation| Secretary
+    P25 -->|Confirmation| ShowMgr
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class Secretary,ShowMgr,ConfigFile external
+    class P21,P22,P23,P24,P25 process
+    class D3,D4 datastore

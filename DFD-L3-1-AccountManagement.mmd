@@ -1,0 +1,36 @@
+flowchart TB
+    User[["User"]]
+
+    P111(("1.1.1<br/>Register<br/>Account"))
+    P112(("1.1.2<br/>Hash<br/>Password"))
+    P113(("1.1.3<br/>Validate<br/>Email"))
+    P114(("1.1.4<br/>Create<br/>User Record"))
+    P115(("1.1.5<br/>Assign Default<br/>Role"))
+    P116(("1.1.6<br/>View<br/>Account"))
+
+    D1[(D1: User Accounts)]
+    D2[(D2: Roles)]
+
+    User -->|Email, Password| P111
+    P111 -->|Validate Format| P113
+    P113 -->|Valid Email| P111
+    P111 -->|Password| P112
+    P112 -->|Hashed Password| P111
+    P111 -->|Create User| P114
+    P114 -->|Store User| D1
+    P114 -->|Trigger Role| P115
+    P115 -->|Assign Spectator| D2
+    P115 -->|Confirmation| User
+
+    User -->|View Request| P116
+    P116 -->|Get User Data| D1
+    P116 -->|Get Roles| D2
+    P116 -->|Account Details| User
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class User external
+    class P111,P112,P113,P114,P115,P116 process
+    class D1,D2 datastore

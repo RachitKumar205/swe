@@ -1,0 +1,40 @@
+flowchart TB
+    User[["User"]]
+    President[["President"]]
+    Secretary[["Secretary"]]
+
+    P11(("1.1<br/>Account<br/>Management"))
+    P12(("1.2<br/>Authentication"))
+    P13(("1.3<br/>Role<br/>Assignment"))
+    P14(("1.4<br/>Role<br/>Validation"))
+
+    D1[(D1: User Accounts)]
+    D2[(D2: Roles)]
+
+    User -->|Register/View| P11
+    P11 <-->|User Data| D1
+    P11 -->|Default Role| D2
+    P11 -->|Confirmation| User
+
+    User -->|Login| P12
+    P12 <-->|Credentials| D1
+    P12 <-->|Get Roles| D2
+    P12 -->|Auth Token| User
+
+    President -->|Assign/Remove Secretary| P13
+    Secretary -->|Assign/Remove Other Roles| P13
+    P13 -->|Validate Authority| P14
+    P14 <-->|Check Roles| D2
+    P14 -->|Authorized| P13
+    P13 <-->|User Lookup| D1
+    P13 <-->|Update Roles| D2
+    P13 -->|Confirmation| President
+    P13 -->|Confirmation| Secretary
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class User,President,Secretary external
+    class P11,P12,P13,P14 process
+    class D1,D2 datastore

@@ -1,0 +1,45 @@
+flowchart TB
+    President[["President"]]
+    Secretary[["Secretary"]]
+
+    P131(("1.3.1<br/>Validate<br/>Requester"))
+    P132(("1.3.2<br/>Check Target<br/>User Exists"))
+    P133(("1.3.3<br/>Validate Role<br/>Authority"))
+    P134(("1.3.4<br/>Add<br/>Role"))
+    P135(("1.3.5<br/>Remove<br/>Role"))
+    P136(("1.3.6<br/>Notify<br/>User"))
+
+    D1[(D1: User Accounts)]
+    D2[(D2: Roles)]
+
+    President -->|Assign/Remove Secretary| P131
+    Secretary -->|Assign/Remove Role| P131
+    P131 -->|Check Requester Role| D2
+    D2 -->|Requester Authority| P131
+    P131 -->|Valid Requester| P132
+    P132 -->|Check User| D1
+    D1 -->|User Exists| P132
+    P132 -->|Valid User| P133
+    P133 -->|Check Authority for Role| D2
+    P133 -->|Authorized| P134
+    P133 -->|Authorized| P135
+
+    President -->|Add Role| P134
+    Secretary -->|Add Role| P134
+    P134 -->|Insert Role| D2
+    P134 -->|Notify| P136
+    P136 -->|Confirmation| President
+    P136 -->|Confirmation| Secretary
+
+    President -->|Remove Role| P135
+    Secretary -->|Remove Role| P135
+    P135 -->|Delete Role| D2
+    P135 -->|Notify| P136
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class President,Secretary external
+    class P131,P132,P133,P134,P135,P136 process
+    class D1,D2 datastore

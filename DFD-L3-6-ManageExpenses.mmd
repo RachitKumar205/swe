@@ -1,0 +1,51 @@
+flowchart TB
+    Clerk[["Financial Clerk"]]
+
+    P511(("5.1.1<br/>Validate<br/>Clerk"))
+    P512(("5.1.2<br/>Validate<br/>Show"))
+    P513(("5.1.3<br/>Create<br/>Expense"))
+    P514(("5.1.4<br/>Update<br/>Expense"))
+    P515(("5.1.5<br/>Delete<br/>Expense"))
+    P516(("5.1.6<br/>Trigger<br/>Balance Update"))
+
+    D4[(D4: Shows)]
+    D9[(D9: Expense Logs)]
+
+    Clerk -->|Create Expense| P511
+    Clerk -->|Update Expense| P511
+    Clerk -->|Delete Expense| P511
+    P511 -->|Check Clerk Role| P511
+    P511 -->|Authorized| P512
+    P512 -->|Validate Show| D4
+    D4 -->|Show Exists| P512
+    P512 -->|Valid| P513
+    P512 -->|Valid| P514
+    P512 -->|Valid| P515
+
+    Clerk -->|Show, Amount, Type, Desc| P513
+    P513 -->|Create Entry| D9
+    P513 -->|Trigger| P516
+    P516 -->|Update Balances| P516
+    P513 -->|Confirmation| Clerk
+
+    Clerk -->|Expense ID, Updates| P514
+    P514 -->|Get Expense| D9
+    D9 -->|Expense Data| P514
+    P514 -->|Update Entry| D9
+    P514 -->|Trigger| P516
+    P514 -->|Confirmation| Clerk
+
+    Clerk -->|Expense ID| P515
+    P515 -->|Get Expense| D9
+    D9 -->|Expense Data| P515
+    P515 -->|Delete Entry| D9
+    P515 -->|Trigger| P516
+    P515 -->|Confirmation| Clerk
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class Clerk external
+    class P511,P512,P513,P514,P515,P516 process
+    class D4,D9 datastore

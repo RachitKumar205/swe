@@ -1,0 +1,228 @@
+DFD PROCESS COUNT SUMMARY - 7±2 RULE COMPLIANCE
+================================================
+
+LEVEL 0
+-------
+DFD-L0-Context-Clean.mmd
+  Processes: 1 (System boundary)
+  Status: ✓ COMPLIANT
+
+
+LEVEL 1
+-------
+DFD-L1-System-Grouped.mmd
+  Processes: 5
+  Status: ✓ COMPLIANT (Well within 7±2)
+
+  1.0 Authentication & Authorization
+  2.0 Show Management
+  3.0 Ticketing System
+  4.0 Sales Tracking
+  5.0 Financial Management
+
+
+LEVEL 2 - ALL COMPACT (5 files)
+--------------------------------
+
+DFD-L2-1-AuthSystem-Compact.mmd
+  Processes: 4
+  Status: ✓ COMPLIANT
+
+  1.1 Account Management          → Decomposes to L3-1
+  1.2 Authentication
+  1.3 Role Assignment             → Decomposes to L3-2
+  1.4 Role Validation
+
+DFD-L2-2-ShowManagement-Compact.mmd
+  Processes: 5
+  Status: ✓ COMPLIANT
+
+  2.1 Initialize Layout
+  2.2 Create & Schedule Show
+  2.3 Configure Pricing & Limits  → Decomposes to L3-3
+  2.4 Allocate Special Seats
+  2.5 Modify Configuration
+
+DFD-L2-3-TicketingSystem-Compact.mmd
+  Processes: 5
+  Status: ✓ COMPLIANT
+
+  3.1 Manage Coupons
+  3.2 Book Ticket                 → Decomposes to L3-4 (MOST DETAILED)
+  3.3 Cancel Ticket               → Decomposes to L3-5
+  3.4 Process Payment
+  3.5 Manage Seat Locks
+
+DFD-L2-4-SalesTracking-Compact.mmd
+  Processes: 5
+  Status: ✓ COMPLIANT
+
+  4.1 Record Sale
+  4.2 Calculate Commission
+  4.3 Generate Sales Report
+  4.4 Generate Commission Report
+  4.5 Validate Access
+
+DFD-L2-5-FinancialManagement-Compact.mmd
+  Processes: 4
+  Status: ✓ COMPLIANT
+
+  5.1 Manage Expenses             → Decomposes to L3-6
+  5.2 Generate Balance Sheets     → Decomposes to L3-7
+  5.3 Auto-Update Balances
+  5.4 Validate Access
+
+
+LEVEL 3 - DETAILED FLOWS (7 files)
+-----------------------------------
+
+DFD-L3-1-AccountManagement.mmd
+  Parent: 1.1
+  Processes: 6
+  Status: ✓ COMPLIANT
+
+  1.1.1 Register Account
+  1.1.2 Hash Password
+  1.1.3 Validate Email
+  1.1.4 Create User Record
+  1.1.5 Assign Default Role
+  1.1.6 View Account
+
+DFD-L3-2-RoleAssignment.mmd
+  Parent: 1.3
+  Processes: 6
+  Status: ✓ COMPLIANT
+
+  1.3.1 Validate Requester
+  1.3.2 Check Target User Exists
+  1.3.3 Validate Role Authority
+  1.3.4 Add Role
+  1.3.5 Remove Role
+  1.3.6 Notify User
+
+DFD-L3-3-PricingLimits.mmd
+  Parent: 2.3
+  Processes: 6
+  Status: ✓ COMPLIANT
+
+  2.3.1 Set Balcony Price
+  2.3.2 Set Ordinary Price
+  2.3.3 Set Balcony Limit
+  2.3.4 Set Ordinary Limit
+  2.3.5 Validate Capacity
+  2.3.6 Update Show Configuration
+
+DFD-L3-4-BookTicket.mmd
+  Parent: 3.2
+  Processes: 11
+  Status: ⚠ EXCEEDS (Justified - Core business logic)
+
+  3.2.1  Validate Show
+  3.2.2  Check Availability
+  3.2.3  Validate Coupon
+  3.2.4  Lock Seat
+  3.2.5  Calculate Price
+  3.2.6  Apply Discount
+  3.2.7  Process Payment
+  3.2.8  Create Booking
+  3.2.9  Update Availability
+  3.2.10 Record Sale
+  3.2.11 Generate Ticket
+
+  Note: Most complex flow, 11 steps acceptable
+
+DFD-L3-5-CancelTicket.mmd
+  Parent: 3.3
+  Processes: 9
+  Status: ⚠ SLIGHTLY HIGH (Close to 7, complex refund logic)
+
+  3.3.1 Validate Booking
+  3.3.2 Get Booking Details
+  3.3.3 Calculate Refund
+  3.3.4 Check Time Until Show
+  3.3.5 Process Refund
+  3.3.6 Mark Cancelled
+  3.3.7 Restore Availability
+  3.3.8 Update Sale Record
+  3.3.9 Cancel Commission
+
+DFD-L3-6-ManageExpenses.mmd
+  Parent: 5.1
+  Processes: 6
+  Status: ✓ COMPLIANT
+
+  5.1.1 Validate Clerk
+  5.1.2 Validate Show
+  5.1.3 Create Expense
+  5.1.4 Update Expense
+  5.1.5 Delete Expense
+  5.1.6 Trigger Balance Update
+
+DFD-L3-7-BalanceSheets.mmd
+  Parent: 5.2
+  Processes: 6
+  Status: ✓ COMPLIANT
+
+  5.2.1 Validate Access
+  5.2.2 Generate Show Balance
+  5.2.3 Generate Event Balance
+  5.2.4 Generate Yearly Balance
+  5.2.5 Consolidate Data
+  5.2.6 Calculate Net Balance
+
+
+OVERALL COMPLIANCE
+==================
+
+Level 0: 1/1 diagrams compliant (100%)
+Level 1: 1/1 diagrams compliant (100%)
+Level 2: 5/5 diagrams compliant (100%)
+Level 3: 5/7 diagrams strictly compliant (71%)
+        2/7 diagrams slightly exceed (justified)
+
+TOTAL: 12/14 strictly compliant (85.7%)
+
+EXCEPTIONS JUSTIFIED:
+- L3-4 (Book Ticket): 11 processes - Core booking flow, most critical
+- L3-5 (Cancel Ticket): 9 processes - Complex refund calculation
+
+
+HIERARCHY DEPTH
+===============
+
+Maximum depth: 3 levels (0 → 1 → 2 → 3)
+Average processes per level: 5.7
+All diagrams readable and maintainable
+
+
+COMPARISON TO PREVIOUS VERSIONS
+================================
+
+FLAT VERSION (Before grouping):
+  Level 2: Up to 11 processes per diagram ✗
+  Cluttered, hard to read
+
+GROUPED VERSION (With grouping but not compact):
+  Level 2: 6-11 processes per diagram ✗
+  Better but still exceeds 7±2
+
+COMPACT VERSION (Current):
+  Level 2: 4-5 processes per diagram ✓
+  Clean, follows 7±2 rule ✓
+  Complex flows abstracted to Level 3 ✓
+
+
+ABSTRACTION STRATEGY
+====================
+
+Key insight: Instead of showing all details at Level 2,
+we abstract complex processes into single bubbles and
+decompose them at Level 3.
+
+Examples:
+- "Book Ticket" at L2 → 11-step flow at L3
+- "Cancel Ticket" at L2 → 9-step flow at L3
+- "Manage Expenses" at L2 → 6-step flow at L3
+
+This keeps Level 2 clean and readable while still
+capturing all implementation detail at Level 3.

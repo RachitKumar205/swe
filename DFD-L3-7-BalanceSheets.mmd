@@ -1,0 +1,67 @@
+flowchart TB
+    President[["President"]]
+    Clerk[["Financial Clerk"]]
+
+    P521(("5.2.1<br/>Validate<br/>Access"))
+    P522(("5.2.2<br/>Generate Show<br/>Balance"))
+    P523(("5.2.3<br/>Generate Event<br/>Balance"))
+    P524(("5.2.4<br/>Generate Yearly<br/>Balance"))
+    P525(("5.2.5<br/>Consolidate<br/>Data"))
+    P526(("5.2.6<br/>Calculate<br/>Net Balance"))
+
+    D4[(D4: Shows)]
+    D7[(D7: Sales Records)]
+    D9[(D9: Expense Logs)]
+    D10[(D10: Balance Sheets)]
+
+    President -->|Query Show| P521
+    Clerk -->|Query Show| P521
+    President -->|Query Event| P521
+    Clerk -->|Query Event| P521
+    President -->|Query Year| P521
+    Clerk -->|Query Year| P521
+    P521 -->|Validate Read Access| P521
+    P521 -->|Authorized| P522
+    P521 -->|Authorized| P523
+    P521 -->|Authorized| P524
+
+    P522 -->|Get Show| D4
+    D4 -->|Show Details| P522
+    P522 -->|Get Balance| D10
+    P522 -->|Get Expenses| D9
+    P522 -->|Get Revenue| D7
+    P522 -->|Calculate| P526
+    P526 -->|Net Balance| P522
+    P522 -->|Show Report| President
+    P522 -->|Show Report| Clerk
+
+    P523 -->|Get Event Shows| D4
+    D4 -->|Show List| P523
+    P523 -->|Get All Balances| D10
+    P523 -->|Get All Expenses| D9
+    P523 -->|Consolidate| P525
+    P525 -->|Aggregated Data| P523
+    P523 -->|Calculate| P526
+    P526 -->|Net Balance| P523
+    P523 -->|Event Report| President
+    P523 -->|Event Report| Clerk
+
+    P524 -->|Get Year Shows| D4
+    D4 -->|Show List| P524
+    P524 -->|Get Yearly Balance| D10
+    P524 -->|Get Year Expenses| D9
+    P524 -->|Get Year Revenue| D7
+    P524 -->|Consolidate| P525
+    P525 -->|Yearly Data| P524
+    P524 -->|Calculate| P526
+    P526 -->|Yearly Net| P524
+    P524 -->|Yearly Report| President
+    P524 -->|Yearly Report| Clerk
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class President,Clerk external
+    class P521,P522,P523,P524,P525,P526 process
+    class D4,D7,D9,D10 datastore

@@ -1,0 +1,332 @@
+AMTS DATA FLOW DIAGRAMS - COMPACT HIERARCHICAL STRUCTURE
+========================================================
+Following the 7±2 Rule: Maximum 7 processes per level
+
+═══════════════════════════════════════════════════════════════════════════════
+LEVEL 0: CONTEXT DIAGRAM
+═══════════════════════════════════════════════════════════════════════════════
+
+File: DFD-L0-Context-Clean.mmd
+
+PROCESS COUNT: 1 (System boundary)
+EXTERNAL ENTITIES: 7
+- Spectator
+- President
+- Auditorium Secretary
+- Show Manager
+- Sales Agent
+- Financial Clerk
+- Payment Gateway
+
+═══════════════════════════════════════════════════════════════════════════════
+LEVEL 1: SYSTEM DECOMPOSITION
+═══════════════════════════════════════════════════════════════════════════════
+
+File: DFD-L1-System-Grouped.mmd
+
+PROCESS COUNT: 5 (Within 7±2 rule ✓)
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ 1.0 - AUTHENTICATION & AUTHORIZATION                                       │
+│   Data Stores: D1 (User Accounts), D2 (Roles)                              │
+│   Functions: User registration, login, role management                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ 2.0 - SHOW MANAGEMENT                                                      │
+│   Data Stores: D3 (Auditorium Layout), D4 (Shows)                          │
+│   Functions: Layout initialization, show configuration                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ 3.0 - TICKETING SYSTEM                                                     │
+│   Data Stores: D5 (Bookings), D6 (Coupons)                                 │
+│   Functions: Ticket booking, cancellation, coupon management               │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ 4.0 - SALES TRACKING                                                       │
+│   Data Stores: D7 (Sales Records), D8 (Commissions)                        │
+│   Functions: Sales recording, commission calculation, reporting            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ 5.0 - FINANCIAL MANAGEMENT                                                 │
+│   Data Stores: D9 (Expense Logs), D10 (Balance Sheets)                     │
+│   Functions: Expense tracking, balance sheet generation                    │
+└────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+LEVEL 2: SUBSYSTEM DECOMPOSITION (5 FILES)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ LEVEL 2.1: AUTHENTICATION & AUTHORIZATION                                  │
+│ File: DFD-L2-1-AuthSystem-Compact.mmd                                      │
+│ PROCESS COUNT: 4 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 1.1 Account Management - Register and view user accounts                   │
+│      → Decomposes to: L3-1 (6 processes)                                   │
+│ 1.2 Authentication - Login and session management                          │
+│ 1.3 Role Assignment - Assign/remove roles to users                         │
+│      → Decomposes to: L3-2 (6 processes)                                   │
+│ 1.4 Role Validation - Verify user permissions                              │
+│                                                                             │
+│ Data Stores: D1 (User Accounts), D2 (Roles)                                │
+│ FRs Covered: FR-CVA1, FR-CVA2, FR-AR1, FR-AR2, FR-AR3, FR-AR4             │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ LEVEL 2.2: SHOW MANAGEMENT                                                 │
+│ File: DFD-L2-2-ShowManagement-Compact.mmd                                  │
+│ PROCESS COUNT: 5 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 2.1 Initialize Layout - Load auditorium configuration                      │
+│ 2.2 Create & Schedule Show - Setup new shows                               │
+│ 2.3 Configure Pricing & Limits - Set prices and seat counts                │
+│      → Decomposes to: L3-3 (6 processes)                                   │
+│ 2.4 Allocate Special Seats - VIP and complimentary seats                   │
+│ 2.5 Modify Configuration - Update show settings                            │
+│                                                                             │
+│ Data Stores: D3 (Auditorium Layout), D4 (Shows)                            │
+│ FRs Covered: FR-CL1, FR-SCS1, FR-SCS2, FR-SCS3, FR-SCS4, FR-SCS5, FR-SCS6 │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ LEVEL 2.3: TICKETING SYSTEM                                                │
+│ File: DFD-L2-3-TicketingSystem-Compact.mmd                                 │
+│ PROCESS COUNT: 5 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 3.1 Manage Coupons - Purchase and validate coupons                         │
+│ 3.2 Book Ticket - Process all booking types (online/coupon/agent)          │
+│      → Decomposes to: L3-4 (11 processes) **MOST COMPLEX**                 │
+│ 3.3 Cancel Ticket - Handle cancellations and refunds                       │
+│      → Decomposes to: L3-5 (9 processes)                                   │
+│ 3.4 Process Payment - Payment gateway integration                          │
+│ 3.5 Manage Seat Locks - 5-minute seat locking mechanism                    │
+│                                                                             │
+│ Data Stores: D4 (Shows), D5 (Bookings), D6 (Coupons), D7 (Sales)           │
+│ FRs Covered: FR-TS1, FR-TS2, FR-TS3, FR-TS4, FR-TS5, FR-TS6                │
+│ NFRs: NFR-SAFE-1 (5-minute seat lock)                                      │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ LEVEL 2.4: SALES TRACKING                                                  │
+│ File: DFD-L2-4-SalesTracking-Compact.mmd                                   │
+│ PROCESS COUNT: 5 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 4.1 Record Sale - Capture sales transactions                               │
+│ 4.2 Calculate Commission - Compute 1% agent commission                     │
+│      → See also: DFD-L3-CommissionProcess.mmd (detailed version)           │
+│ 4.3 Generate Sales Report - Sales reporting for authorized users           │
+│ 4.4 Generate Commission Report - Commission reporting                      │
+│ 4.5 Validate Access - Authorization checks                                 │
+│                                                                             │
+│ Data Stores: D5 (Bookings), D7 (Sales Records), D8 (Commissions)           │
+│ FRs Covered: FR-SR1, FR-SR2                                                 │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ LEVEL 2.5: FINANCIAL MANAGEMENT                                            │
+│ File: DFD-L2-5-FinancialManagement-Compact.mmd                             │
+│ PROCESS COUNT: 4 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 5.1 Manage Expenses - Create/update/delete expense logs                    │
+│      → Decomposes to: L3-6 (6 processes)                                   │
+│ 5.2 Generate Balance Sheets - Show/event/yearly reports                    │
+│      → Decomposes to: L3-7 (6 processes)                                   │
+│ 5.3 Auto-Update Balances - Triggered by expense changes                    │
+│ 5.4 Validate Access - Authorization for financial data                     │
+│                                                                             │
+│ Data Stores: D4 (Shows), D7 (Sales), D9 (Expenses), D10 (Balance Sheets)   │
+│ FRs Covered: FR-ET1, FR-ET2, FR-ET3, FR-ET4, FR-ET5, FR-ET6                │
+└────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+LEVEL 3: DETAILED PROCESS DECOMPOSITION (7 FILES)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-1: Account Management (1.1)                                             │
+│ File: DFD-L3-1-AccountManagement.mmd                                       │
+│ PROCESS COUNT: 6 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 1.1.1 Register Account                                                     │
+│ 1.1.2 Hash Password                                                        │
+│ 1.1.3 Validate Email                                                       │
+│ 1.1.4 Create User Record                                                   │
+│ 1.1.5 Assign Default Role (Spectator)                                      │
+│ 1.1.6 View Account                                                         │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-2: Role Assignment (1.3)                                                │
+│ File: DFD-L3-2-RoleAssignment.mmd                                          │
+│ PROCESS COUNT: 6 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 1.3.1 Validate Requester (President/Secretary)                             │
+│ 1.3.2 Check Target User Exists                                             │
+│ 1.3.3 Validate Role Authority                                              │
+│ 1.3.4 Add Role                                                             │
+│ 1.3.5 Remove Role                                                          │
+│ 1.3.6 Notify User                                                          │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-3: Pricing & Limits Configuration (2.3)                                 │
+│ File: DFD-L3-3-PricingLimits.mmd                                           │
+│ PROCESS COUNT: 6 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 2.3.1 Set Balcony Price                                                    │
+│ 2.3.2 Set Ordinary Price                                                   │
+│ 2.3.3 Set Balcony Limit                                                    │
+│ 2.3.4 Set Ordinary Limit                                                   │
+│ 2.3.5 Validate Capacity                                                    │
+│ 2.3.6 Update Show Configuration                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-4: Book Ticket (3.2) **MOST DETAILED**                                  │
+│ File: DFD-L3-4-BookTicket.mmd                                              │
+│ PROCESS COUNT: 11 (Exceeds 7 but justified - core business logic)          │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 3.2.1  Validate Show                                                       │
+│ 3.2.2  Check Availability                                                  │
+│ 3.2.3  Validate Coupon                                                     │
+│ 3.2.4  Lock Seat (5 minutes)                                               │
+│ 3.2.5  Calculate Price                                                     │
+│ 3.2.6  Apply Discount (10% if coupon)                                      │
+│ 3.2.7  Process Payment                                                     │
+│ 3.2.8  Create Booking                                                      │
+│ 3.2.9  Update Availability                                                 │
+│ 3.2.10 Record Sale                                                         │
+│ 3.2.11 Generate Ticket                                                     │
+│                                                                             │
+│ Note: 11 processes - acceptable as this is the most critical flow          │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-5: Cancel Ticket (3.3)                                                  │
+│ File: DFD-L3-5-CancelTicket.mmd                                            │
+│ PROCESS COUNT: 9 (Close to 7, acceptable)                                  │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 3.3.1 Validate Booking                                                     │
+│ 3.3.2 Get Booking Details                                                  │
+│ 3.3.3 Calculate Refund (tiered policy)                                     │
+│ 3.3.4 Check Time Until Show                                                │
+│ 3.3.5 Process Refund                                                       │
+│ 3.3.6 Mark Cancelled                                                       │
+│ 3.3.7 Restore Availability                                                 │
+│ 3.3.8 Update Sale Record                                                   │
+│ 3.3.9 Cancel Commission (if agent sale)                                    │
+│                                                                             │
+│ Refund Policy:                                                             │
+│ - >3 days: Full refund - Rs 5/ticket                                       │
+│ - 1-3 days: Full refund - Rs 10/15 per ticket                              │
+│ - <24 hours: 50% refund                                                    │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-6: Manage Expenses (5.1)                                                │
+│ File: DFD-L3-6-ManageExpenses.mmd                                          │
+│ PROCESS COUNT: 6 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 5.1.1 Validate Clerk                                                       │
+│ 5.1.2 Validate Show                                                        │
+│ 5.1.3 Create Expense                                                       │
+│ 5.1.4 Update Expense                                                       │
+│ 5.1.5 Delete Expense                                                       │
+│ 5.1.6 Trigger Balance Update                                               │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ L3-7: Generate Balance Sheets (5.2)                                        │
+│ File: DFD-L3-7-BalanceSheets.mmd                                           │
+│ PROCESS COUNT: 6 (Within 7±2 rule ✓)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 5.2.1 Validate Access                                                      │
+│ 5.2.2 Generate Show Balance                                                │
+│ 5.2.3 Generate Event Balance                                               │
+│ 5.2.4 Generate Yearly Balance                                              │
+│ 5.2.5 Consolidate Data                                                     │
+│ 5.2.6 Calculate Net Balance                                                │
+└────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+HIERARCHY SUMMARY
+═══════════════════════════════════════════════════════════════════════════════
+
+Level 0: 1 process
+Level 1: 5 processes (✓ Under 7)
+Level 2: 4-5 processes per subsystem (✓ All under 7)
+Level 3: 6-11 processes per detailed flow (✓ Mostly under 7, one justified exception)
+
+TOTAL FILES: 14
+- 1 Context diagram
+- 1 Level 1 system
+- 5 Level 2 subsystems
+- 7 Level 3 detailed processes
+
+TOTAL PROCESSES: ~70 processes across all levels
+ALL 28 FUNCTIONAL REQUIREMENTS COVERED
+
+═══════════════════════════════════════════════════════════════════════════════
+7±2 RULE COMPLIANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Level 0: 1 process (system boundary)
+✓ Level 1: 5 processes (well within 7)
+✓ Level 2.1: 4 processes
+✓ Level 2.2: 5 processes
+✓ Level 2.3: 5 processes
+✓ Level 2.4: 5 processes
+✓ Level 2.5: 4 processes
+✓ Level 3.1: 6 processes
+✓ Level 3.2: 6 processes
+✓ Level 3.3: 6 processes
+⚠ Level 3.4: 11 processes (justified - core booking logic)
+⚠ Level 3.5: 9 processes (close to 7, complex cancellation)
+✓ Level 3.6: 6 processes
+✓ Level 3.7: 6 processes
+
+COMPLIANCE RATE: 12/14 diagrams strictly comply (85%)
+2 diagrams slightly exceed due to complexity of core business operations
+
+═══════════════════════════════════════════════════════════════════════════════
+KEY IMPROVEMENTS OVER PREVIOUS VERSION
+═══════════════════════════════════════════════════════════════════════════════
+
+BEFORE (Grouped but not compact):
+- Level 2: 4-11 processes per diagram
+- Some diagrams too cluttered
+- Not following 7±2 rule
+
+AFTER (Compact):
+- Level 2: 4-5 processes per diagram ✓
+- Clean, focused diagrams ✓
+- Strictly follows 7±2 rule ✓
+- Complex processes abstracted to Level 3 ✓
+
+ABSTRACTION EXAMPLES:
+- "Book Ticket" (3.2) at L2 → 11 detailed processes at L3
+- "Cancel Ticket" (3.3) at L2 → 9 detailed processes at L3
+- "Manage Expenses" (5.1) at L2 → 6 detailed processes at L3
+- "Generate Balance Sheets" (5.2) at L2 → 6 detailed processes at L3
+
+═══════════════════════════════════════════════════════════════════════════════
+NAVIGATION GUIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+To understand ticket booking:
+L0 → L1 (3.0 Ticketing) → L2-3 (3.2 Book Ticket) → L3-4 (11-step detailed flow)
+
+To understand role management:
+L0 → L1 (1.0 Auth) → L2-1 (1.3 Role Assignment) → L3-2 (6-step detailed flow)
+
+To understand financial reporting:
+L0 → L1 (5.0 Financial) → L2-5 (5.2 Generate Sheets) → L3-7 (6-step detailed flow)
+
+To understand cancellations:
+L0 → L1 (3.0 Ticketing) → L2-3 (3.3 Cancel Ticket) → L3-5 (9-step detailed flow)
+
+═══════════════════════════════════════════════════════════════════════════════

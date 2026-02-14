@@ -1,0 +1,36 @@
+flowchart TB
+    Spectator[["Spectator"]]
+    President[["President"]]
+    Secretary[["Auditorium<br/>Secretary"]]
+    ShowMgr[["Show<br/>Manager"]]
+    Agent[["Sales<br/>Agent"]]
+    Clerk[["Financial<br/>Clerk"]]
+    Payment[["Payment<br/>Gateway"]]
+
+    AMTS((("AMTS")))
+
+    Spectator -->|Registration, Bookings, Cancellations| AMTS
+    AMTS -->|Tickets, Confirmations, Refunds| Spectator
+
+    President -->|Role Assignments, Queries| AMTS
+    AMTS -->|Financial Reports| President
+
+    Secretary -->|Role Management, Show Setup| AMTS
+    AMTS -->|Sales Reports, Confirmations| Secretary
+
+    ShowMgr -->|Show Configuration| AMTS
+    AMTS -->|Configuration Status| ShowMgr
+
+    Agent -->|Ticket Sales| AMTS
+    AMTS -->|Tickets, Commission Reports| Agent
+
+    Clerk -->|Expense Logs, Queries| AMTS
+    AMTS -->|Balance Sheets, Reports| Clerk
+
+    AMTS <-->|Payments, Refunds| Payment
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef system fill:#fff9c4,stroke:#f57f17,stroke-width:5px
+
+    class Spectator,President,Secretary,ShowMgr,Agent,Clerk,Payment external
+    class AMTS system

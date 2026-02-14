@@ -1,0 +1,55 @@
+flowchart TB
+    President[["President"]]
+    Secretary[["Secretary"]]
+    Agent[["Sales Agent"]]
+    Clerk[["Financial Clerk"]]
+
+    P41(("4.1<br/>Record<br/>Sale"))
+    P42(("4.2<br/>Calculate<br/>Commission"))
+    P43(("4.3<br/>Generate<br/>Sales Report"))
+    P44(("4.4<br/>Generate<br/>Commission Report"))
+    P45(("4.5<br/>Validate<br/>Access"))
+
+    D5[(D5: Bookings)]
+    D7[(D7: Sales Records)]
+    D8[(D8: Commissions)]
+
+    P41 -->|Get Booking| D5
+    P41 -->|Record Transaction| D7
+    P41 -->|Trigger| P42
+    P42 -->|Get Sale| D7
+    P42 -->|1% Commission| D8
+
+    President -->|Query Sales| P43
+    Secretary -->|Query Sales| P43
+    Clerk -->|Query Sales| P43
+    Agent -->|Query Own Sales| P43
+    P43 -->|Validate| P45
+    P45 -->|Access Control| P43
+    P43 <-->|Sales Data| D7
+    P43 -->|Booking Details| D5
+    P43 -->|Report| President
+    P43 -->|Report| Secretary
+    P43 -->|Report| Clerk
+    P43 -->|Own Report| Agent
+
+    President -->|Query Commissions| P44
+    Secretary -->|Query Commissions| P44
+    Clerk -->|Query Commissions| P44
+    Agent -->|Query Own Commission| P44
+    P44 -->|Validate| P45
+    P45 -->|Access Control| P44
+    P44 <-->|Commission Data| D8
+    P44 -->|Sales Data| D7
+    P44 -->|Report| President
+    P44 -->|Report| Secretary
+    P44 -->|Report| Clerk
+    P44 -->|Own Report| Agent
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class President,Secretary,Agent,Clerk external
+    class P41,P42,P43,P44,P45 process
+    class D5,D7,D8 datastore

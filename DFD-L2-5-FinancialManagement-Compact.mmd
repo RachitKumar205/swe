@@ -1,0 +1,46 @@
+flowchart TB
+    President[["President"]]
+    Clerk[["Financial Clerk"]]
+
+    P51(("5.1<br/>Manage<br/>Expenses"))
+    P52(("5.2<br/>Generate<br/>Balance Sheets"))
+    P53(("5.3<br/>Auto-Update<br/>Balances"))
+    P54(("5.4<br/>Validate<br/>Access"))
+
+    D4[(D4: Shows)]
+    D7[(D7: Sales Records)]
+    D9[(D9: Expense Logs)]
+    D10[(D10: Balance Sheets)]
+
+    Clerk -->|Create/Update/Delete| P51
+    P51 -->|Validate Clerk| P54
+    P54 -->|Access Granted| P51
+    P51 -->|Get Show| D4
+    P51 <-->|Expense Operations| D9
+    P51 -->|Trigger Update| P53
+    P51 -->|Confirmation| Clerk
+
+    President -->|Query Show/Event/Yearly| P52
+    Clerk -->|Query Show/Event/Yearly| P52
+    P52 -->|Validate Access| P54
+    P54 -->|Read Access| P52
+    P52 -->|Get Shows| D4
+    P52 <-->|Balance Data| D10
+    P52 -->|Expense Data| D9
+    P52 -->|Revenue Data| D7
+    P52 -->|Report| President
+    P52 -->|Report| Clerk
+
+    P53 -->|Get Modified Show| D4
+    P53 -->|Get Expenses| D9
+    P53 -->|Get Revenue| D7
+    P53 -->|Update Show Balance| D10
+    P53 -->|Update Yearly Balance| D10
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class President,Clerk external
+    class P51,P52,P53,P54 process
+    class D4,D7,D9,D10 datastore
