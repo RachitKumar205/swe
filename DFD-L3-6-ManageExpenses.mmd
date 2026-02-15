@@ -1,6 +1,8 @@
-flowchart TB
-    Clerk[["Financial Clerk"]]
+flowchart LR
+    %% Left
+    Clerk[["Financial<br/>Clerk"]]
 
+    %% Center - Linear Flow
     P511(("5.1.1<br/>Validate<br/>Clerk"))
     P512(("5.1.2<br/>Validate<br/>Show"))
     P513(("5.1.3<br/>Create<br/>Expense"))
@@ -8,38 +10,33 @@ flowchart TB
     P515(("5.1.5<br/>Delete<br/>Expense"))
     P516(("5.1.6<br/>Trigger<br/>Balance Update"))
 
+    %% Data Stores
     D4[(D4: Shows)]
-    D9[(D9: Expense Logs)]
+    D9[(D9: Expense<br/>Logs)]
 
-    Clerk -->|Create Expense| P511
-    Clerk -->|Update Expense| P511
-    Clerk -->|Delete Expense| P511
-    P511 -->|Check Clerk Role| P511
+    %% Flows
+    Clerk -->|Create/Update<br/>Delete Expense| P511
+    P511 -->|Check Role| P511
     P511 -->|Authorized| P512
-    P512 -->|Validate Show| D4
-    D4 -->|Show Exists| P512
+    P512 <-->|Validate Show| D4
     P512 -->|Valid| P513
     P512 -->|Valid| P514
     P512 -->|Valid| P515
 
-    Clerk -->|Show, Amount, Type, Desc| P513
+    Clerk -->|Expense Details| P513
     P513 -->|Create Entry| D9
     P513 -->|Trigger| P516
-    P516 -->|Update Balances| P516
-    P513 -->|Confirmation| Clerk
 
-    Clerk -->|Expense ID, Updates| P514
-    P514 -->|Get Expense| D9
-    D9 -->|Expense Data| P514
-    P514 -->|Update Entry| D9
+    Clerk -->|Expense Updates| P514
+    P514 <-->|Get/Update| D9
     P514 -->|Trigger| P516
-    P514 -->|Confirmation| Clerk
 
     Clerk -->|Expense ID| P515
-    P515 -->|Get Expense| D9
-    D9 -->|Expense Data| P515
-    P515 -->|Delete Entry| D9
+    P515 <-->|Get/Delete| D9
     P515 -->|Trigger| P516
+
+    P513 -->|Confirmation| Clerk
+    P514 -->|Confirmation| Clerk
     P515 -->|Confirmation| Clerk
 
     classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px

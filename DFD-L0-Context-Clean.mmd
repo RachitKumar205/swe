@@ -1,33 +1,45 @@
-flowchart TB
+flowchart LR
+    %% Left - Operational Users
     Spectator[["Spectator"]]
-    President[["President"]]
-    Secretary[["Auditorium<br/>Secretary"]]
-    ShowMgr[["Show<br/>Manager"]]
-    Agent[["Sales<br/>Agent"]]
-    Clerk[["Financial<br/>Clerk"]]
-    Payment[["Payment<br/>Gateway"]]
+    Agent[["Sales Agent"]]
+    ShowMgr[["Show Manager"]]
 
+    %% Center - System
     AMTS((("AMTS")))
 
-    Spectator -->|Registration, Bookings, Cancellations| AMTS
-    AMTS -->|Tickets, Confirmations, Refunds| Spectator
+    %% Right - Management & External
+    Secretary[["Secretary"]]
+    President[["President"]]
+    Clerk[["Financial Clerk"]]
+    Payment[["Payment<br/>Gateway"]]
 
-    President -->|Role Assignments, Queries| AMTS
+    %% Spectator flows
+    Spectator -->|Registration<br/>Bookings<br/>Cancellations| AMTS
+    AMTS -->|Tickets<br/>Confirmations<br/>Refunds| Spectator
+
+    %% Sales Agent flows
+    Agent -->|Ticket Sales| AMTS
+    AMTS -->|Tickets<br/>Commission Reports| Agent
+
+    %% Show Manager flows
+    ShowMgr -->|Show Configuration| AMTS
+    AMTS -->|Config Status| ShowMgr
+
+    %% Secretary flows
+    Secretary -->|Role Management<br/>Show Setup| AMTS
+    AMTS -->|Sales Reports<br/>Confirmations| Secretary
+
+    %% President flows
+    President -->|Role Assignments<br/>Queries| AMTS
     AMTS -->|Financial Reports| President
 
-    Secretary -->|Role Management, Show Setup| AMTS
-    AMTS -->|Sales Reports, Confirmations| Secretary
+    %% Financial Clerk flows
+    Clerk -->|Expense Logs<br/>Queries| AMTS
+    AMTS -->|Balance Sheets<br/>Reports| Clerk
 
-    ShowMgr -->|Show Configuration| AMTS
-    AMTS -->|Configuration Status| ShowMgr
-
-    Agent -->|Ticket Sales| AMTS
-    AMTS -->|Tickets, Commission Reports| Agent
-
-    Clerk -->|Expense Logs, Queries| AMTS
-    AMTS -->|Balance Sheets, Reports| Clerk
-
-    AMTS <-->|Payments, Refunds| Payment
+    %% Payment Gateway flows
+    AMTS -->|Payment Requests| Payment
+    Payment -->|Payment Confirmations<br/>Refunds| AMTS
 
     classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
     classDef system fill:#fff9c4,stroke:#f57f17,stroke-width:5px

@@ -1,0 +1,41 @@
+flowchart LR
+    %% Left
+    Secretary[["Auditorium<br/>Secretary"]]
+    ShowMgr[["Show<br/>Manager"]]
+
+    %% Center - Linear Flow
+    P221(("2.2.1<br/>Validate<br/>User Authority"))
+    P222(("2.2.2<br/>Enter Show<br/>Basic Info"))
+    P223(("2.2.3<br/>Assign<br/>Show Manager"))
+    P224(("2.2.4<br/>Set Schedule<br/>Details"))
+    P225(("2.2.5<br/>Create Show<br/>Record"))
+
+    %% Data Stores
+    D2[(D2: Roles)]
+    D1[(D1: User<br/>Accounts)]
+    D3[(D3: Auditorium<br/>Layout)]
+    D4[(D4: Shows)]
+
+    %% Flows
+    Secretary -->|Create Show<br/>Request| P221
+    P221 <-->|Check Role| D2
+    P221 -->|Authorized| P222
+    P222 -->|Show Name<br/>Description| P223
+    Secretary -->|Assign Manager| P223
+    P223 <-->|Check Manager| D1
+    P223 -->|Show + Manager| P224
+
+    ShowMgr -->|Dates, Times<br/>Recurrence| P224
+    P224 -->|Schedule Info| P225
+    P225 <-->|Get Layout Info| D3
+    P225 -->|Create Show| D4
+    P225 -->|Confirmation| Secretary
+    P225 -->|Confirmation| ShowMgr
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class Secretary,ShowMgr external
+    class P221,P222,P223,P224,P225 process
+    class D1,D2,D3,D4 datastore

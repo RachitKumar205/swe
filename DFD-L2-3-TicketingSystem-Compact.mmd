@@ -1,40 +1,50 @@
-flowchart TB
+flowchart LR
+    %% Left - Inputs
     Spectator[["Spectator"]]
-    Agent[["Sales Agent"]]
-    Payment[["Payment Gateway"]]
+    Agent[["Sales<br/>Agent"]]
 
+    %% Center - Processes & Data Stores
     P31(("3.1<br/>Manage<br/>Coupons"))
+    D6[(D6: Coupons)]
+
     P32(("3.2<br/>Book<br/>Ticket"))
+    P35(("3.5<br/>Manage<br/>Seat Locks"))
+
     P33(("3.3<br/>Cancel<br/>Ticket"))
+
     P34(("3.4<br/>Process<br/>Payment"))
-    P35(("3.5<br/>Manage Seat<br/>Locks"))
 
     D4[(D4: Shows)]
     D5[(D5: Bookings)]
-    D6[(D6: Coupons)]
     D7[(D7: Sales)]
 
+    %% Right - Outputs
+    Payment[["Payment<br/>Gateway"]]
+
+    %% Coupon flows
     Spectator -->|Purchase Coupon| P31
+    P31 <-->|Store/Validate| D6
     P31 -->|Payment| P34
     P34 <-->|Transaction| Payment
     P34 -->|Success| P31
-    P31 <-->|Store/Validate Coupon| D6
     P31 -->|Coupon Code| Spectator
 
-    Spectator -->|Book: Show, Seats, Coupon?| P32
-    Agent -->|Sell: Show, Seats| P32
-    P32 -->|Check Availability| D4
-    P32 -->|Validate Coupon| D6
+    %% Booking flows
+    Spectator -->|Book: Show<br/>Seats, Coupon?| P32
+    Agent -->|Sell: Show<br/>Seats, Coupon?<br/>Agent ID| P32
+    P32 <-->|Check Availability| D4
+    P32 <-->|Validate Coupon| D6
     P32 -->|Lock Seat| P35
     P35 <-->|Seat Locks| D5
     P32 -->|Payment| P34
     P34 -->|Success| P32
-    P32 -->|Create Booking| D5
+    P32 <-->|Create Booking| D5
     P32 -->|Update Availability| D4
-    P32 -->|Record Sale| D7
+    P32 -->|Record Sale<br/>+ Commission| D7
     P32 -->|Ticket| Spectator
     P32 -->|Ticket| Agent
 
+    %% Cancellation flows
     Spectator -->|Cancel Booking| P33
     P33 <-->|Get/Update Booking| D5
     P33 -->|Refund| P34

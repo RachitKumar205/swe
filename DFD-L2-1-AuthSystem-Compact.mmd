@@ -1,19 +1,23 @@
-flowchart TB
+flowchart LR
+    %% Left - Inputs
     User[["User"]]
     President[["President"]]
     Secretary[["Secretary"]]
 
+    %% Center - Processes
     P11(("1.1<br/>Account<br/>Management"))
     P12(("1.2<br/>Authentication"))
-    P13(("1.3<br/>Role<br/>Assignment"))
     P14(("1.4<br/>Role<br/>Validation"))
+    P13(("1.3<br/>Role<br/>Assignment"))
 
-    D1[(D1: User Accounts)]
+    %% Data Stores
+    D1[(D1: User<br/>Accounts)]
     D2[(D2: Roles)]
 
+    %% Flows
     User -->|Register/View| P11
     P11 <-->|User Data| D1
-    P11 -->|Default Role| D2
+    P11 <-->|Default Role| D2
     P11 -->|Confirmation| User
 
     User -->|Login| P12
@@ -21,9 +25,9 @@ flowchart TB
     P12 <-->|Get Roles| D2
     P12 -->|Auth Token| User
 
-    President -->|Assign/Remove Secretary| P13
-    Secretary -->|Assign/Remove Other Roles| P13
-    P13 -->|Validate Authority| P14
+    President -->|Assign/Remove<br/>Secretary| P13
+    Secretary -->|Assign/Remove<br/>Other Roles| P13
+    P13 -->|Validate| P14
     P14 <-->|Check Roles| D2
     P14 -->|Authorized| P13
     P13 <-->|User Lookup| D1

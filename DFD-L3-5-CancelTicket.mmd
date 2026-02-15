@@ -1,51 +1,42 @@
-flowchart TB
+flowchart LR
+    %% Left
     Spectator[["Spectator"]]
-    Payment[["Payment Gateway"]]
 
-    P331(("3.3.1<br/>Validate<br/>Booking"))
-    P332(("3.3.2<br/>Get<br/>Booking Details"))
-    P333(("3.3.3<br/>Calculate<br/>Refund"))
-    P334(("3.3.4<br/>Check Time<br/>Until Show"))
-    P335(("3.3.5<br/>Process<br/>Refund"))
-    P336(("3.3.6<br/>Mark<br/>Cancelled"))
-    P337(("3.3.7<br/>Restore<br/>Availability"))
-    P338(("3.3.8<br/>Update<br/>Sale Record"))
-    P339(("3.3.9<br/>Cancel<br/>Commission"))
+    %% Center - Linear Flow
+    P331(("3.3.1<br/>Validate & Get<br/>Booking"))
+    P332(("3.3.2<br/>Calculate Refund<br/>by Time Policy"))
+    P333(("3.3.3<br/>Process<br/>Refund"))
+    P334(("3.3.4<br/>Cancel Booking<br/>& Restore Seats"))
+    P335(("3.3.5<br/>Update Sales<br/>& Commission"))
 
-    D4[(D4: Shows)]
+    %% Right
+    Payment[["Payment<br/>Gateway"]]
+
+    %% Data Stores
     D5[(D5: Bookings)]
+    D4[(D4: Shows)]
     D7[(D7: Sales)]
     D8[(D8: Commissions)]
 
+    %% Flows
     Spectator -->|Booking ID| P331
-    P331 -->|Get Booking| D5
-    D5 -->|Booking Exists| P331
-    P331 -->|Valid| P332
-    P332 -->|Get Details| D5
-    D5 -->|Booking Data| P332
-    P332 -->|Details| P334
-    P334 -->|Get Show Time| D4
-    D4 -->|Show Date/Time| P334
-    P334 -->|Time Difference| P333
-    P333 -->|Calculate Refund Amount| P333
-    P333 -->|Refund Amount| P335
-    P335 <-->|Refund| Payment
-    P335 -->|Success| P336
-    P336 -->|Mark Cancelled| D5
-    P336 -->|Done| P337
-    P337 -->|Increment Count| D4
-    P337 -->|Done| P338
-    P338 -->|Update Sale| D7
-    P338 -->|Check Agent Sale| D7
-    D7 -->|Agent Sale| P338
-    P338 -->|Trigger| P339
-    P339 -->|Cancel Commission| D8
-    P339 -->|Confirmation| Spectator
+    P331 <-->|Get Booking| D5
+    P331 -->|Booking Details| P332
+    P332 <-->|Get Show Time| D4
+    P332 -->|Refund Amount| P333
+    P333 <-->|Process Refund| Payment
+    P333 -->|Success| P334
+    P334 -->|Mark Cancelled| D5
+    P334 -->|Restore Seats| D4
+    P334 -->|Complete| P335
+    P335 <-->|Update Sale| D7
+    P335 -->|Cancel Commission| D8
+    P335 -->|Confirmation| Spectator
 
     classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
     classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
 
     class Spectator,Payment external
-    class P331,P332,P333,P334,P335,P336,P337,P338,P339 process
+    class P331,P332,P333,P334,P335 process
     class D4,D5,D7,D8 datastore

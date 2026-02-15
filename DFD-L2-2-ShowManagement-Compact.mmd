@@ -1,33 +1,37 @@
-flowchart TB
+flowchart LR
+    %% Left - Inputs
+    ConfigFile[["Config<br/>File"]]
     Secretary[["Secretary"]]
-    ShowMgr[["Show Manager"]]
-    ConfigFile[["Config File"]]
+    ShowMgr[["Show<br/>Manager"]]
 
+    %% Center - Processes
     P21(("2.1<br/>Initialize<br/>Layout"))
     P22(("2.2<br/>Create &<br/>Schedule Show"))
     P23(("2.3<br/>Configure<br/>Pricing & Limits"))
     P24(("2.4<br/>Allocate<br/>Special Seats"))
     P25(("2.5<br/>Modify<br/>Configuration"))
 
-    D3[(D3: Auditorium Layout)]
+    %% Data Stores
+    D3[(D3: Auditorium<br/>Layout)]
     D4[(D4: Shows)]
 
+    %% Flows
     ConfigFile -->|Layout Config| P21
     P21 -->|Validate & Store| D3
 
     Secretary -->|Show Details| P22
     ShowMgr -->|Show Details| P22
-    P22 -->|Get Layout| D3
-    P22 -->|Create Show| D4
+    P22 <-->|Get Layout| D3
+    P22 <-->|Create Show| D4
     P22 -->|Confirmation| Secretary
     P22 -->|Confirmation| ShowMgr
 
-    ShowMgr -->|Dates, Times, Prices, Limits| P23
+    ShowMgr -->|Dates, Times<br/>Prices, Limits| P23
     P23 <-->|Show Data| D4
     P23 -->|Capacity Check| D3
     P23 -->|Confirmation| ShowMgr
 
-    ShowMgr -->|VIP/Comp Seat Numbers| P24
+    ShowMgr -->|VIP/Comp<br/>Seat Numbers| P24
     P24 <-->|Show Data| D4
     P24 -->|Validate Seats| D3
     P24 -->|Confirmation| ShowMgr

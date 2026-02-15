@@ -1,97 +1,67 @@
-flowchart TB
+flowchart LR
+    %% Left - User Actors
     Spectator[["Spectator"]]
-    President[["President"]]
+    Agent[["Sales<br/>Agent"]]
+
+    %% Top Row Processes
+    P1(("1.0<br/>User & Role<br/>Management"))
+    P2(("2.0<br/>Show<br/>Config"))
+    P3(("3.0<br/>Ticket<br/>Sales"))
+
+    %% Bottom Row Processes
+    P4(("4.0<br/>Sales<br/>Reports"))
+    P5(("5.0<br/>Financial<br/>Accounting"))
+
+    %% Right - Management Actors
     Secretary[["Secretary"]]
-    ShowMgr[["Show Manager"]]
-    Agent[["Sales Agent"]]
-    Clerk[["Financial Clerk"]]
-    Payment[["Payment Gateway"]]
+    ShowMgr[["Show<br/>Manager"]]
+    President[["President"]]
+    Clerk[["Financial<br/>Clerk"]]
+    Payment[["Payment<br/>Gateway"]]
 
-    subgraph AuthSys["AUTHENTICATION & AUTHORIZATION"]
-        P1(("1.0<br/>User & Role<br/>Management"))
-        D1[(User DB)]
-        D2[(Role DB)]
-        P1 --- D1
-        P1 --- D2
-    end
-
-    subgraph ShowSys["SHOW MANAGEMENT"]
-        P2(("2.0<br/>Show<br/>Configuration"))
-        D3[(Layout DB)]
-        D4[(Show DB)]
-        P2 --- D3
-        P2 --- D4
-    end
-
-    subgraph TicketSys["TICKETING SYSTEM"]
-        P3(("3.0<br/>Ticket Sales<br/>& Booking"))
-        D5[(Booking DB)]
-        D6[(Coupon DB)]
-        P3 --- D5
-        P3 --- D6
-    end
-
-    subgraph SalesSys["SALES TRACKING"]
-        P4(("4.0<br/>Sales<br/>Reporting"))
-        D7[(Sales DB)]
-        D8[(Commission DB)]
-        P4 --- D7
-        P4 --- D8
-    end
-
-    subgraph FinSys["FINANCIAL MANAGEMENT"]
-        P5(("5.0<br/>Financial<br/>Accounting"))
-        D9[(Expense DB)]
-        D10[(Balance DB)]
-        P5 --- D9
-        P5 --- D10
-    end
-
+    %% User interactions (left side)
     Spectator -->|Register/Login| P1
     P1 -->|Auth Token| Spectator
-
-    President -->|Assign Secretary| P1
-    Secretary -->|Assign Roles| P1
-    P1 -->|Role Confirmation| President
-    P1 -->|Role Confirmation| Secretary
-
-    Secretary -->|Schedule Show| P2
-    ShowMgr -->|Configure Show| P2
-    P2 -->|Show Confirmation| Secretary
-    P2 -->|Config Confirmation| ShowMgr
-
     Spectator -->|Book Ticket| P3
     Agent -->|Sell Ticket| P3
     P3 -->|Ticket| Spectator
     P3 -->|Ticket| Agent
-    P3 <-->|Payment| Payment
 
-    P2 -->|Show Availability| P3
-    P3 -->|Sale Transaction| P4
+    %% Management interactions (right side)
+    Secretary -->|Assign Roles| P1
+    P1 -->|Confirmation| Secretary
+    President -->|Assign Secretary| P1
+    P1 -->|Confirmation| President
 
+    Secretary -->|Schedule Show| P2
+    P2 -->|Confirmation| Secretary
+    ShowMgr -->|Configure Show| P2
+    P2 -->|Confirmation| ShowMgr
+
+    %% Process flows
+    P2 -->|Show Details| P3
+    P3 -->|Payment Request| Payment
+    Payment -->|Payment Confirmation| P3
+    P3 -->|Sale Data| P4
+
+    %% Reporting flows (right side)
     President -->|Query Sales| P4
-    Secretary -->|Query Sales| P4
-    Agent -->|Query Commission| P4
-    Clerk -->|Query Sales| P4
     P4 -->|Sales Report| President
-    P4 -->|Sales Report| Secretary
+    Clerk -->|Query Sales| P4
+    P4 -->|Sales Report| Clerk
+    Agent -->|Query Commission| P4
     P4 -->|Commission Report| Agent
-    P4 -->|Sales Data| Clerk
 
     Clerk -->|Expense Entry| P5
     President -->|Query Balance| P5
-    Clerk -->|Query Balance| P5
     P5 -->|Balance Sheet| President
+    Clerk -->|Query Balance| P5
     P5 -->|Balance Sheet| Clerk
 
     P4 -->|Revenue Data| P5
 
     classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
     classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
-    classDef subsystem fill:#f3e5f5,stroke:#6a1b9a,stroke-width:3px
 
     class Spectator,President,Secretary,ShowMgr,Agent,Clerk,Payment external
     class P1,P2,P3,P4,P5 process
-    class D1,D2,D3,D4,D5,D6,D7,D8,D9,D10 datastore
-    class AuthSys,ShowSys,TicketSys,SalesSys,FinSys subsystem

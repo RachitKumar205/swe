@@ -1,19 +1,15 @@
-flowchart TB
+flowchart LR
     Spectator[["Spectator"]]
     Agent[["Sales Agent"]]
     Payment[["Payment Gateway"]]
 
-    P321(("3.2.1<br/>Validate<br/>Show"))
-    P322(("3.2.2<br/>Check<br/>Availability"))
-    P323(("3.2.3<br/>Validate<br/>Coupon"))
-    P324(("3.2.4<br/>Lock<br/>Seat"))
-    P325(("3.2.5<br/>Calculate<br/>Price"))
-    P326(("3.2.6<br/>Apply<br/>Discount"))
-    P327(("3.2.7<br/>Process<br/>Payment"))
-    P328(("3.2.8<br/>Create<br/>Booking"))
-    P329(("3.2.9<br/>Update<br/>Availability"))
-    P3210(("3.2.10<br/>Record<br/>Sale"))
-    P3211(("3.2.11<br/>Generate<br/>Ticket"))
+    P321(("3.2.1<br/>Validate Request<br/>& Availability"))
+    P322(("3.2.2<br/>Validate<br/>Coupon"))
+    P323(("3.2.3<br/>Lock<br/>Seat"))
+    P324(("3.2.4<br/>Calculate<br/>Final Price"))
+    P325(("3.2.5<br/>Process<br/>Payment"))
+    P326(("3.2.6<br/>Finalize<br/>Booking"))
+    P327(("3.2.7<br/>Generate<br/>Ticket"))
 
     D4[(D4: Shows)]
     D5[(D5: Bookings)]
@@ -21,42 +17,37 @@ flowchart TB
     D7[(D7: Sales)]
 
     Spectator -->|Show, Seats, Coupon?| P321
-    Agent -->|Show, Seats| P321
-    P321 -->|Validate Show| D4
-    D4 -->|Show Exists| P321
-    P321 -->|Valid| P322
-    P322 -->|Check Seats| D4
-    D4 -->|Available| P322
-    P322 -->|Available| P323
-    P323 -->|Validate Coupon| D6
-    D6 -->|Coupon Valid| P323
-    P323 -->|Valid/None| P324
-    P324 -->|Lock 5 Min| D5
-    P324 -->|Locked| P325
-    P325 -->|Get Price| D4
-    D4 -->|Seat Price| P325
-    P325 -->|Price| P326
-    P326 -->|Apply 10% Discount| D6
-    P326 -->|Final Price| P327
-    P327 <-->|Payment| Payment
-    P327 -->|Success| P328
-    P328 -->|Create Record| D5
-    P328 -->|Done| P329
-    P329 -->|Decrement Count| D4
-    P329 -->|Done| P3210
-    P3210 -->|Record Transaction| D7
-    P3210 -->|Done| P3211
-    P3211 -->|Get Booking & Show| D5
-    D5 -->|Booking Details| P3211
-    P3211 -->|Get Show Info| D4
-    D4 -->|Show Details| P3211
-    P3211 -->|Ticket| Spectator
-    P3211 -->|Ticket| Agent
+    Agent -->|Show, Seats, Agent ID| P321
+    P321 -->|Check Show & Seats| D4
+    D4 -->|Show Details, Availability| P321
+    P321 -->|Valid Request| P322
+    P322 -->|Validate Coupon| D6
+    D6 -->|Coupon Status| P322
+    P322 -->|Validated| P323
+    P323 -->|Lock 5 Min| D5
+    P323 -->|Locked| P324
+    P324 -->|Get Price| D4
+    D4 -->|Seat Price| P324
+    P324 -->|Apply Discount| D6
+    D6 -->|Discount Amount| P324
+    P324 -->|Final Price| P325
+    P325 <-->|Payment| Payment
+    P325 -->|Payment Success| P326
+    P326 -->|Create Booking| D5
+    P326 -->|Update Availability| D4
+    P326 -->|Record Sale| D7
+    P326 -->|Booking Confirmed| P327
+    P327 -->|Get Booking Details| D5
+    D5 -->|Booking Info| P327
+    P327 -->|Get Show Info| D4
+    D4 -->|Show Details| P327
+    P327 -->|Ticket| Spectator
+    P327 -->|Ticket| Agent
 
     classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
     classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
 
     class Spectator,Agent,Payment external
-    class P321,P322,P323,P324,P325,P326,P327,P328,P329,P3210,P3211 process
+    class P321,P322,P323,P324,P325,P326,P327 process
     class D4,D5,D6,D7 datastore

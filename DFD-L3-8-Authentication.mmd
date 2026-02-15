@@ -1,0 +1,32 @@
+flowchart LR
+    %% Left
+    User[["User"]]
+
+    %% Center - Linear Flow
+    P121(("1.2.1<br/>Receive<br/>Credentials"))
+    P122(("1.2.2<br/>Validate<br/>Email Format"))
+    P123(("1.2.3<br/>Verify<br/>Password"))
+    P124(("1.2.4<br/>Retrieve<br/>User Roles"))
+    P125(("1.2.5<br/>Generate<br/>Auth Token"))
+
+    %% Data Stores
+    D1[(D1: User<br/>Accounts)]
+    D2[(D2: Roles)]
+
+    %% Flows
+    User -->|Email, Password| P121
+    P121 -->|Email| P122
+    P122 -->|Valid Email| P123
+    P123 <-->|Check Credentials| D1
+    P123 -->|Authenticated<br/>User ID| P124
+    P124 <-->|Get Roles| D2
+    P124 -->|User + Roles| P125
+    P125 -->|Auth Token| User
+
+    classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    classDef datastore fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+
+    class User external
+    class P121,P122,P123,P124,P125 process
+    class D1,D2 datastore

@@ -1,40 +1,36 @@
-flowchart TB
+flowchart LR
+    %% Left
     President[["President"]]
     Secretary[["Secretary"]]
 
+    %% Center - Linear Flow
     P131(("1.3.1<br/>Validate<br/>Requester"))
     P132(("1.3.2<br/>Check Target<br/>User Exists"))
     P133(("1.3.3<br/>Validate Role<br/>Authority"))
-    P134(("1.3.4<br/>Add<br/>Role"))
-    P135(("1.3.5<br/>Remove<br/>Role"))
-    P136(("1.3.6<br/>Notify<br/>User"))
+    P134(("1.3.4<br/>Add Role"))
+    P135(("1.3.5<br/>Remove Role"))
+    P136(("1.3.6<br/>Notify User"))
 
-    D1[(D1: User Accounts)]
+    %% Data Stores
+    D1[(D1: User<br/>Accounts)]
     D2[(D2: Roles)]
 
-    President -->|Assign/Remove Secretary| P131
-    Secretary -->|Assign/Remove Role| P131
-    P131 -->|Check Requester Role| D2
-    D2 -->|Requester Authority| P131
-    P131 -->|Valid Requester| P132
-    P132 -->|Check User| D1
-    D1 -->|User Exists| P132
-    P132 -->|Valid User| P133
-    P133 -->|Check Authority for Role| D2
-    P133 -->|Authorized| P134
-    P133 -->|Authorized| P135
-
-    President -->|Add Role| P134
-    Secretary -->|Add Role| P134
+    %% Flows
+    President -->|Assign/Remove<br/>Secretary| P131
+    Secretary -->|Assign/Remove<br/>Role| P131
+    P131 <-->|Check Requester| D2
+    P131 -->|Valid| P132
+    P132 <-->|Check User| D1
+    P132 -->|Exists| P133
+    P133 <-->|Check Authority| D2
+    P133 -->|Add| P134
+    P133 -->|Remove| P135
     P134 -->|Insert Role| D2
+    P135 -->|Delete Role| D2
     P134 -->|Notify| P136
+    P135 -->|Notify| P136
     P136 -->|Confirmation| President
     P136 -->|Confirmation| Secretary
-
-    President -->|Remove Role| P135
-    Secretary -->|Remove Role| P135
-    P135 -->|Delete Role| D2
-    P135 -->|Notify| P136
 
     classDef external fill:#e1f5ff,stroke:#01579b,stroke-width:3px
     classDef process fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px

@@ -1,25 +1,29 @@
-flowchart TB
+flowchart LR
+    %% Left - Inputs
     President[["President"]]
     Secretary[["Secretary"]]
-    Agent[["Sales Agent"]]
-    Clerk[["Financial Clerk"]]
+    Agent[["Sales<br/>Agent"]]
+    Clerk[["Financial<br/>Clerk"]]
 
+    %% Center - Processes
     P41(("4.1<br/>Record<br/>Sale"))
     P42(("4.2<br/>Calculate<br/>Commission"))
+    P45(("4.5<br/>Validate<br/>Access"))
     P43(("4.3<br/>Generate<br/>Sales Report"))
     P44(("4.4<br/>Generate<br/>Commission Report"))
-    P45(("4.5<br/>Validate<br/>Access"))
 
+    %% Data Stores
     D5[(D5: Bookings)]
-    D7[(D7: Sales Records)]
+    D7[(D7: Sales<br/>Records)]
     D8[(D8: Commissions)]
 
-    P41 -->|Get Booking| D5
+    %% Sale recording flows
+    P41 <-->|Get Booking| D5
     P41 -->|Record Transaction| D7
-    P41 -->|Trigger| P42
-    P42 -->|Get Sale| D7
-    P42 -->|1% Commission| D8
+    P42 <-->|Get Agent Sale| D7
+    P42 -->|Store 1%<br/>Commission| D8
 
+    %% Sales reporting flows
     President -->|Query Sales| P43
     Secretary -->|Query Sales| P43
     Clerk -->|Query Sales| P43
@@ -27,20 +31,21 @@ flowchart TB
     P43 -->|Validate| P45
     P45 -->|Access Control| P43
     P43 <-->|Sales Data| D7
-    P43 -->|Booking Details| D5
+    P43 <-->|Booking Details| D5
     P43 -->|Report| President
     P43 -->|Report| Secretary
     P43 -->|Report| Clerk
     P43 -->|Own Report| Agent
 
-    President -->|Query Commissions| P44
-    Secretary -->|Query Commissions| P44
-    Clerk -->|Query Commissions| P44
-    Agent -->|Query Own Commission| P44
+    %% Commission reporting flows
+    President -->|Query<br/>Commissions| P44
+    Secretary -->|Query<br/>Commissions| P44
+    Clerk -->|Query<br/>Commissions| P44
+    Agent -->|Query Own<br/>Commission| P44
     P44 -->|Validate| P45
     P45 -->|Access Control| P44
     P44 <-->|Commission Data| D8
-    P44 -->|Sales Data| D7
+    P44 <-->|Sales Data| D7
     P44 -->|Report| President
     P44 -->|Report| Secretary
     P44 -->|Report| Clerk
